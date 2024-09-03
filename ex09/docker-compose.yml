@@ -1,0 +1,37 @@
+version: "3"
+services:
+    db:
+        build:
+            #도커파일 내부에서 찾을 때 경로를 기본적으로 설정
+            context: ./db
+            dockerfile: Dockerfile
+        ports:
+            - 3306:3306
+        volumes:
+            #내부의 데이터를 기본적으로 store 폴더에 볼륨으로저장
+            - ./docker-test-db/store:/var/lib/mysql
+        networks:
+            - network
+
+    server:
+        build:
+            context: ./product
+            dockerfile: Dockerfile
+        restart: always
+        ports:
+            - 8080:8080
+        #db가 다 준비되면, server가 run 된다.
+        depends_on:
+            - db
+        environment:
+            #db 서비스이름으로 확인
+            SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/metadb?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true
+            SPRING_DATASOURCE_DRIVER: com.mysql.cj.jdbc.Driver
+            SPRING_DATASOURCE_USERNAME: root
+            SPRING_DATASOURCE_PASSWORD: root1234
+        #동일 키워드 이름으로 network 이름을 지정해야함
+        networks:
+            - network
+
+networks:
+    network:

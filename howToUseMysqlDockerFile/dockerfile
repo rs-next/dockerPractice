@@ -1,0 +1,12 @@
+FROM mysql
+
+#환경 변수 설정
+ENV MYSQL_USER=hyun
+ENV MYSQL_PASSWORD=1234
+ENV MYSQL_ROOT_PASSWORD=root1234
+ENV MYSQL_DATABASE=hyundb
+
+#매번 넣는게 귀찮아서..? 이거 꼭넣어야한대
+#--character-set-server=utf8mb4 : 기본 문자 세트 utf8
+#CMD는 컨테이너가 실행될 때 MySQL 서버에 전달할 추가적인 명령줄 인자를 정의
+CMD [ "--character-set-server=utf8mb4","--collation-server=utf8mb4_unicode_ci" ]
